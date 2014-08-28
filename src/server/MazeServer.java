@@ -33,36 +33,9 @@ public class MazeServer {
 				System.out.println("Client host "+MazeClient.getInetAddress());
 				System.out.println("Client port "+MazeClient.getPort());
 				
-				//To write to client socket
-				PrintWriter out = new PrintWriter(MazeClient.getOutputStream(),true);
-			
-				//To read from client socket
-				BufferedReader in = new BufferedReader(new InputStreamReader(MazeClient.getInputStream()));
-							
-				String clientInput;
-			
-				out.println("Connected");
-				
-				try {
-					
-					clientInput = in.readLine();
-				
-					while(clientInput != null ){
-						
-						System.out.println("Client says : "+clientInput);
-						out.println(clientInput);
-						if(clientInput.equals("Bye")){
-							break;
-						}
-						
-						clientInput = in.readLine();
-						
-					}
-				}catch(SocketException se){
-					
-					System.out.println("Client Disconnected");
-				}
-											
+				//Start a new thread for the client
+				(new MazeServerThread(MazeClient)).start();
+														
 			}
 			
 			// Close the socket connection
