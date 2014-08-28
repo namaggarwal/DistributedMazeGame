@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class MazeServer {
 	
@@ -42,28 +43,38 @@ public class MazeServer {
 			
 				out.println("Connected");
 				
-				while((clientInput = in.readLine()) != null ){
+				try {
 					
-					System.out.println("Client says : "+clientInput);
-					out.println(clientInput);
-					if(clientInput.equals("Bye")){
-						break;
+					clientInput = in.readLine();
+				
+					while(clientInput != null ){
+						
+						System.out.println("Client says : "+clientInput);
+						out.println(clientInput);
+						if(clientInput.equals("Bye")){
+							break;
+						}
+						
+						clientInput = in.readLine();
+						
 					}
+				}catch(SocketException se){
 					
-					
+					System.out.println("Client Disconnected");
 				}
-				
-				// Close the socket connection
-				ss.close();
-				
+											
 			}
 			
+			// Close the socket connection
+			ss.close();
 			
 			
 			
 		}catch(IOException e){
 			
 			System.err.println("Could not listen on port " + port);
+			System.err.println("Error trace ");
+			e.printStackTrace();
             System.exit(-1);
             
 		}finally{
